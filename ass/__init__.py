@@ -10,4 +10,6 @@ __all__ = [
     "parse",
 ]
 
-parse = document.Document.parse_file
+parse_file = document.Document.parse_file
+parse_string = document.Document.parse_string
+parse = parse_file
