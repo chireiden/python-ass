@@ -8,6 +8,10 @@ __all__ = [
     *line.__all__,
     *section.__all__,
     "parse",
+    "parse_file",
+    "parse_string",
 ]
 
-parse = document.Document.parse_file
+parse_file = document.Document.parse_file
+parse_string = document.Document.parse_string
+parse = parse_file
