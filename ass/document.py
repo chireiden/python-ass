@@ -1,3 +1,5 @@
+import codecs
+
 from .section import ScriptInfoSection, FieldSection, StylesSection, EventsSection, LineSection
 from ._util import CaseInsensitiveOrderedDict
 
@@ -39,6 +41,7 @@ class Document(object):
     STYLE_ASS_HEADER = "V4+ Styles"
     EVENTS_HEADER = "Events"
     AEGISUB_PROJECT_HEADER = "Aegisub Project Garbage"
+    PREFERRED_ENCODING = codecs.lookup('utf_8_sig')
 
     SECTIONS = CaseInsensitiveOrderedDict({
         SCRIPT_INFO_HEADER: ScriptInfoSection,
@@ -84,7 +87,7 @@ class Document(object):
                 bom_seqeunces = ("\xef\xbb\xbf", "\xff\xfe", "\ufeff")
                 if any(line.startswith(seq) for seq in bom_seqeunces):
                     raise ValueError("BOM detected. Please open the file with the proper encoding,"
-                                     " usually 'utf_8_sig'")
+                                     " usually '%s'" % cls.PREFERRED_ENCODING.name)
 
             line = line.strip()
             if not line or line.startswith(';'):
@@ -127,14 +130,22 @@ class Document(object):
         """
         return cls.parse_file(string.splitlines())
 
+    @classmethod
+    def is_preferred_encoding(cls, encoding):
+        try:
+            enc_codec = codecs.lookup(encoding)
+        except (LookupError, TypeError):
+            return False
+        return enc_codec == cls.PREFERRED_ENCODING
+
     def dump_file(self, f):
         """ Dump this ASS document to a file object.
         """
         encoding = getattr(f, 'encoding')
-        if encoding and encoding != 'utf_8_sig':
+        if encoding and not self.is_preferred_encoding(encoding):
             import warnings
             warnings.warn("It is recommended to write UTF-8 with BOM"
-                          " using the 'utf_8_sig' encoding")
+                          " using the '%s' encoding" % self.PREFERRED_ENCODING.name)
 
         for section in self.sections.values():
             f.write("\n".join(section.dump()))

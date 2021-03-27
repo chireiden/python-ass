@@ -35,8 +35,12 @@ class TestDocument:
                 ass.parse(f)
 
     def test_dump_encoding(self):
-        with self.test_ass.open("r", encoding='utf_8_sig') as f:
-            doc = ass.parse(f)
+        for encoding in ('utf_8_sig', 'utf-8-sig'):
+            with self.test_ass.open("r", encoding=encoding) as f:
+                doc = ass.parse(f)
+
+            with self.test_ass.open("r", encoding=encoding.upper()) as f:
+                doc = ass.parse(f)
 
         import tempfile
         with tempfile.TemporaryFile(mode='w', encoding='utf_8') as f:
