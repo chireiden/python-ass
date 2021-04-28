@@ -456,8 +456,8 @@ class Track(ctypes.Structure):
         self.wrap_style = doc.wrap_style
         self.scaled_border_and_shadow = (doc.scaled_border_and_shadow.lower() == "yes")
 
-        self.style_format = ", ".join(doc.styles_field_order).encode("utf-8")
-        self.event_format = ", ".join(doc.events_field_order).encode("utf-8")
+        self.style_format = ", ".join(doc.SECTIONS[doc.STYLE_ASS_HEADER].field_order).encode("utf-8")
+        self.event_format = ", ".join(doc.SECTIONS[doc.EVENTS_HEADER].field_order).encode("utf-8")
 
         for d_style in doc.styles:
             style = self.make_style()

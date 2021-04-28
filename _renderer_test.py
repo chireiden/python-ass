@@ -7,6 +7,7 @@ from datetime import timedelta
 import sys
 
 doc = ass.document.Document()
+doc.scaled_border_and_shadow = "yes"
 
 SCALE = 2
 DPI = 72
@@ -22,7 +23,7 @@ doc.styles.append(ass.document.Style(
     margin_v=0,
     fontname="Garamond",
     fontsize=13 * SCALE,
-    primary_color=ass.document.Color.BLACK
+    primary_color=ass.data.Color.BLACK
 ))
 
 doc.events.append(ass.document.Dialogue(
@@ -105,7 +106,7 @@ doc.wrap_style = 1
 ctx = ass.renderer.Context()
 
 r = ctx.make_renderer()
-r.set_fonts(fontconfig_config="/usr/local/etc/fonts/fonts.conf")
+r.set_fonts(fontconfig_config="\0")
 r.set_all_sizes(SIZE)
 
 sys.stdout.write("loading document... ")
