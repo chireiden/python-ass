@@ -1,3 +1,4 @@
+import re
 from datetime import timedelta
 
 
@@ -105,6 +106,14 @@ class _Field(object):
 
         if self.type is timedelta:
             return _Field.timedelta_from_ass(v)
+
+        if self.type is int:
+            # Use a less strict parsing method that mimics libass.
+            # https://github.com/libass/libass/blob/534a5f8299c5ab3c2782856fcb843bfea47b7afc/libass/ass.c#L257
+            if m := re.match(r"^\s*(\d+)", v):
+                return int(m.group(1))
+            elif not v:
+                return 0
 
         if hasattr(self.type, "from_ass"):
             return self.type.from_ass(v)
