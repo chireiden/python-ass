@@ -58,7 +58,7 @@ class TestSections:
         assert len(doc.styles) == 0
         assert len(doc.events) == 0
 
-    def test_scipt_info(self):
+    def test_script_info(self):
         TEST_SCRIPT_INFO = dedent("""\
             [Script Info]
             ScriptType: v4.00+
@@ -80,9 +80,11 @@ class TestSections:
         assert copy["Arbitrary Field"] == "hi"
         assert doc.play_res_x == 500
 
+    @pytest.mark.skip("Unimplemented")
     def test_styles(self):
         pass
 
+    @pytest.mark.skip("Unimplemented")
     def test_events(self):
         pass
 

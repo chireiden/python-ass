@@ -1,0 +1,42 @@
+[project]
+name = "ass"
+version = "1.0.0"
+description = "A library for parsing and manipulating Advanced SubStation Alpha subtitle files."
+authors = [
+  { name="Tony Young", email="author@example.com" },
+  { name="FichteFoll", email="fichtefoll2@googlemail.com" },
+  { name="Myaamori" },
+]
+maintainers = [
+  { name="FichteFoll", email="fichtefoll2@googlemail.com" },
+]
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Text Processing :: Markup",
+]
+dependencies = []
+
+[project.urls]
+homepage = "http://github.com/chireiden/python-ass"
+issues = "http://github.com/chireiden/python-ass/issues"
+releasenotes = "https://github.com/chireiden/python-ass/releases"
+
+[dependency-groups]
+dev = [
+    "coverage",
+    "flake8==3.7.9",
+    "pytest",
+]
+
+[build-system]
+requires = ["uv_build>=0.8.22,<0.9.0"]
+build-backend = "uv_build"
