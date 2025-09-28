@@ -9,7 +9,7 @@ resolution-markers = [
 [[package]]
 name = "ass"
 version = "1.0.0"
-source = { virtual = "." }
+source = { editable = "." }
 
 [package.dev-dependencies]
 dev = [
