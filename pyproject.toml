@@ -36,3 +36,7 @@ dev = [
     "flake8==3.7.9",
     "pytest",
 ]
+
+[build-system]
+requires = ["uv_build>=0.8.22,<0.9.0"]
+build-backend = "uv_build"
