@@ -80,9 +80,11 @@ class TestSections:
         assert copy["Arbitrary Field"] == "hi"
         assert doc.play_res_x == 500
 
+    @pytest.mark.skip("Unimplemented")
     def test_styles(self):
         pass
 
+    @pytest.mark.skip("Unimplemented")
     def test_events(self):
         pass
 
