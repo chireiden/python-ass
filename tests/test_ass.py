@@ -131,14 +131,14 @@ class TestEvents:
         script = dedent("""\
             [Events]
             Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-            Dialogue: 0,0:00:02.59,0:00:03.88,TopLeft,,,,25.00,,Fractional and empty margins
+            Dialogue: 0,0:00:02.59,0:00:03.88,TopLeft,,,0x88,25.00,,Fractional, hexadecimal and empty margins
             Dialogue: 0,0:00:02.59,0:00:03.88,TopLeft,,+514,-494, 33,,Signed margins
             Dialogue: 0,0:00:02.59,0:00:03.88,TopLeft,, -24,- 44,+ 72,,Sign and space
             """)
 
         doc = ass.parse_string(script)
         assert doc.events[0].margin_l == 0
-        assert doc.events[0].margin_r == 0
+        assert doc.events[0].margin_r == 0x88
         assert doc.events[0].margin_v == 25
         assert doc.events[1].margin_l == 514
         assert doc.events[1].margin_r == -494
