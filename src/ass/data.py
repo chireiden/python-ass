@@ -46,10 +46,7 @@ class Color(object):
     def __repr__(self):
         return "{name}(r=0x{r:02x}, g=0x{g:02x}, b=0x{b:02x}, a=0x{a:02x})".format(
             name=self.__class__.__name__,
-            r=self.r,
-            g=self.g,
-            b=self.b,
-            a=self.a
+            **self.__dict__
         )
 
 
