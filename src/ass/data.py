@@ -119,7 +119,7 @@ class _Field(object):
             return None
 
         if self.type is bool:
-            return bool(-int(v))
+            return v.strip().lower() == "yes" or bool(int(v))
 
         if self.type is timedelta:
             return _Field.timedelta_from_ass(v)
