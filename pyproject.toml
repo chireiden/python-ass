@@ -26,9 +26,9 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-homepage = "http://github.com/chireiden/python-ass"
-issues = "http://github.com/chireiden/python-ass/issues"
-releasenotes = "https://github.com/chireiden/python-ass/releases"
+Homepage = "http://github.com/chireiden/python-ass"
+Issues = "http://github.com/chireiden/python-ass/issues"
+"Release Notes" = "https://github.com/chireiden/python-ass/releases"
 
 [dependency-groups]
 dev = [
