@@ -59,6 +59,23 @@ Color.RED = Color(255, 0, 0)
 Color.BLACK = Color(0, 0, 0)
 
 
+def _parse_int_header(s: str) -> int:
+    """Parse an integer header value in all formats that libass understands.
+
+    https://github.com/libass/libass/blob/534a5f8299c5ab3c2782856fcb843bfea47b7afc/libass/ass.c#L318
+    """
+    stripped = s.lstrip()
+    if stripped.startswith('0x') or stripped.startswith('&h') or stripped.startswith('&H'):
+        stripped = stripped[2:]
+        if m := re.match(r"^[+-]?[\dA-Fa-f]+", stripped):
+            return int(m.group(0), 16)
+    elif m := re.match(r"^[+-]?\d+", stripped):
+        return int(m.group(0))
+
+    # Invalid or empty
+    return 0
+
+
 class _Field(object):
     _last_creation_order = -1
 
@@ -108,12 +125,7 @@ class _Field(object):
             return _Field.timedelta_from_ass(v)
 
         if self.type is int:
-            # Use a less strict parsing method that mimics libass.
-            # https://github.com/libass/libass/blob/534a5f8299c5ab3c2782856fcb843bfea47b7afc/libass/ass.c#L257
-            if m := re.match(r"^\s*(\d+)", v):
-                return int(m.group(1))
-            elif not v:
-                return 0
+            return _parse_int_header(v)
 
         if hasattr(self.type, "from_ass"):
             return self.type.from_ass(v)
