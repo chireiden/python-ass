@@ -1,3 +1,4 @@
+import re
 from datetime import timedelta
 
 
@@ -55,6 +56,23 @@ Color.RED = Color(255, 0, 0)
 Color.BLACK = Color(0, 0, 0)
 
 
+def _parse_int_header(s: str) -> int:
+    """Parse an integer header value in all formats that libass understands.
+
+    https://github.com/libass/libass/blob/534a5f8299c5ab3c2782856fcb843bfea47b7afc/libass/ass.c#L318
+    """
+    stripped = s.lstrip()
+    if stripped.startswith('0x') or stripped.startswith('&h') or stripped.startswith('&H'):
+        stripped = stripped[2:]
+        if m := re.match(r"^[+-]?[\dA-Fa-f]+", stripped):
+            return int(m.group(0), 16)
+    elif m := re.match(r"^[+-]?\d+", stripped):
+        return int(m.group(0))
+
+    # Invalid or empty
+    return 0
+
+
 class _Field(object):
     _last_creation_order = -1
 
@@ -98,10 +116,14 @@ class _Field(object):
             return None
 
         if self.type is bool:
-            return bool(-int(v))
+            # https://github.com/libass/libass/blob/534a5f8299c5ab3c2782856fcb843bfea47b7afc/libass/ass.c#L340
+            return v.strip().lower().startswith("yes") or int(v) > 0
 
         if self.type is timedelta:
             return _Field.timedelta_from_ass(v)
+
+        if self.type is int:
+            return _parse_int_header(v)
 
         if hasattr(self.type, "from_ass"):
             return self.type.from_ass(v)
