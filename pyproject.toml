@@ -1,6 +1,6 @@
 [project]
 name = "ass"
-version = "1.0.0"
+version = "1.0.1"
 description = "A library for parsing and manipulating Advanced SubStation Alpha subtitle files."
 authors = [
   { name="Tony Young", email="author@example.com" },
