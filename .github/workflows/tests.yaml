@@ -1,0 +1,37 @@
+name: "Tests"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:  # all pull requests
+
+jobs:
+  pytest:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install uv with Python ${{ matrix.python-version }}
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
+      - name: Run tests (with coverage)
+
+        run: |
+          uv run coverage run -m pytest
+          uv run coverage report -m
