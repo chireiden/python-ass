@@ -2,6 +2,9 @@
 ScriptType: v4.00+
 PlayResX: 500
 PlayResY: 500
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+YCbCr Matrix: None
 
 [Aegisub Project Garbage]
 Audio File: video.mkv
