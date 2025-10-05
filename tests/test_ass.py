@@ -79,9 +79,22 @@ class TestSections:
         assert copy["Arbitrary Field"] == "hi"
         assert doc.play_res_x == 500
 
-    @pytest.mark.skip("Unimplemented")
-    def test_styles(self):
-        pass
+    def test_styles(self, example_doc):
+        assert len(example_doc.styles) == 2
+        default_style, alternative_style = example_doc.styles
+
+        assert default_style.name == "Default"
+        assert alternative_style.name == "Alternative"
+
+        assert default_style.bold is False
+        assert default_style.italic is False
+        assert default_style.underline is False
+        assert default_style.strike_out is False
+
+        assert alternative_style.bold is True
+        assert alternative_style.italic is True
+        assert alternative_style.underline is True
+        assert alternative_style.strike_out is True
 
     @pytest.mark.skip("Unimplemented")
     def test_events(self):
