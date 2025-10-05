@@ -98,6 +98,9 @@ class _Field(object):
             return ""
 
         if isinstance(v, bool):
+            # Mimics behavior of booleans in styles,
+            # not that of field sections
+            # where "yes" and "no" would be more appropriate.
             return str(-int(v))
 
         if isinstance(v, timedelta):

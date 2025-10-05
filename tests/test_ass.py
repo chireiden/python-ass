@@ -9,43 +9,42 @@ import pytest
 import ass
 
 folder = Path(__file__).parent
+test_ass_path = Path(folder, "test.ass")
+
+
+@pytest.fixture
+def example_ass():
+    with test_ass_path.open("r", encoding='utf_8_sig') as f:
+        return f.read()
+
+
+@pytest.fixture
+def example_doc(example_ass):
+    return ass.parse(StringIO(example_ass))
 
 
 class TestDocument:
 
-    test_ass = Path(folder, "test.ass")
-
-    def test_parse_dump(self):
-        with self.test_ass.open("r", encoding='utf_8_sig') as f:
-            contents = f.read()
-
-        doc = ass.parse(StringIO(contents))
+    def test_parse_dump(self, example_doc, example_ass):
         out = StringIO()
-        doc.dump_file(out)
+        example_doc.dump_file(out)
+        assert out.getvalue() == example_ass
 
-        assert out.getvalue() == contents
-
-    def test_parse_encoding(self):
-        with self.test_ass.open("r", encoding='utf_8') as f:
+    def test_parse_encoding_utf8(self):
+        with test_ass_path.open("r", encoding='utf_8') as f:
             with pytest.raises(ValueError):
                 ass.parse(f)
 
-        with self.test_ass.open("r", encoding='ascii') as f:
+    def test_parse_encoding_ascii(self):
+        with test_ass_path.open("r", encoding='ascii') as f:
             with pytest.raises(ValueError):
                 ass.parse(f)
 
-    def test_dump_encoding(self):
-        for encoding in ('utf_8_sig', 'utf-8-sig'):
-            with self.test_ass.open("r", encoding=encoding) as f:
-                doc = ass.parse(f)
-
-            with self.test_ass.open("r", encoding=encoding.upper()) as f:
-                doc = ass.parse(f)
-
+    def test_dump_encoding(self, example_doc):
         import tempfile
         with tempfile.TemporaryFile(mode='w', encoding='utf_8') as f:
             with pytest.warns(UserWarning):
-                doc.dump_file(f)
+                example_doc.dump_file(f)
 
 
 class TestSections:
@@ -80,9 +79,22 @@ class TestSections:
         assert copy["Arbitrary Field"] == "hi"
         assert doc.play_res_x == 500
 
-    @pytest.mark.skip("Unimplemented")
-    def test_styles(self):
-        pass
+    def test_styles(self, example_doc):
+        assert len(example_doc.styles) == 2
+        default_style, alternative_style = example_doc.styles
+
+        assert default_style.name == "Default"
+        assert alternative_style.name == "Alternative"
+
+        assert default_style.bold is False
+        assert default_style.italic is False
+        assert default_style.underline is False
+        assert default_style.strike_out is False
+
+        assert alternative_style.bold is True
+        assert alternative_style.italic is True
+        assert alternative_style.underline is True
+        assert alternative_style.strike_out is True
 
     @pytest.mark.skip("Unimplemented")
     def test_events(self):

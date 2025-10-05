@@ -80,6 +80,18 @@ class Unknown(_Line):
     value = _Field("Value", str, default="")
 
 
+def _parse_bool_in_style(s: str) -> bool:
+    """Booleans in styles are parsed as integers and compared against 0.
+
+    This is unlike the normal "parse_bool" behavior.
+    It would probably be more sane to parse these as ints,
+    but that would be a breaking change to our API.
+
+    https://github.com/libass/libass/blob/534a5f8299c5ab3c2782856fcb843bfea47b7afc/libass/ass.c#L602-L605
+    """
+    return int(s) != 0
+
+
 class Style(_Line):
     """ A style line in ASS.
     """
@@ -92,10 +104,10 @@ class Style(_Line):
     secondary_color = _Field("SecondaryColour", Color, default=Color.RED)
     outline_color = _Field("OutlineColour", Color, default=Color.BLACK)
     back_color = _Field("BackColour", Color, default=Color.BLACK)
-    bold = _Field("Bold", bool, default=False)
-    italic = _Field("Italic", bool, default=False)
-    underline = _Field("Underline", bool, default=False)
-    strike_out = _Field("StrikeOut", bool, default=False)
+    bold = _Field("Bold", _parse_bool_in_style, default=False)
+    italic = _Field("Italic", _parse_bool_in_style, default=False)
+    underline = _Field("Underline", _parse_bool_in_style, default=False)
+    strike_out = _Field("StrikeOut", _parse_bool_in_style, default=False)
     scale_x = _Field("ScaleX", float, default=100)
     scale_y = _Field("ScaleY", float, default=100)
     spacing = _Field("Spacing", float, default=0)
