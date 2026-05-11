@@ -93,7 +93,7 @@ class Document(object):
             if not line:
                 continue
 
-            if line.startswith(';'): 
+            if line.startswith(';'):
                 # ";" comments only permitted in Script Info section, ignore otherwise
                 if section == doc.sections.get("Script Info"):
                     section.add_comment(line[1:])
