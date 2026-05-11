@@ -90,7 +90,13 @@ class Document(object):
                                      " usually '%s'" % cls.PREFERRED_ENCODING.name)
 
             line = line.strip()
-            if not line or line.startswith(';'):
+            if not line:
+                continue
+
+            if line.startswith(';'):
+                # ";" comments only permitted in Script Info section, ignore otherwise
+                if section == doc.sections.get("Script Info"):
+                    section.add_comment(line[1:])
                 continue
 
             if line.startswith('[') and line.endswith(']'):

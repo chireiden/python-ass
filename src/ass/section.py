@@ -84,6 +84,11 @@ class FieldSection(abc.MutableMapping):
     def dump(self):
         yield "[{}]".format(self.name)
 
+        # Comments are customarily at the beginning
+        if hasattr(self, "comments"):
+            for c in self.comments:
+                yield ";{}".format(c)
+
         for k, v in self._fields.items():
             yield "{}: {}".format(k, _Field.dump(v))
 
@@ -149,3 +154,10 @@ class ScriptInfoSection(FieldSection):
         "WrapStyle": _Field("WrapStyle", int, default=0),
         "ScaledBorderAndShadow": _Field("ScaledBorderAndShadow", str, default="yes")
     }
+
+    def add_comment(self, comment):
+        self.comments.append(comment)
+
+    def __init__(self, name, fields=None):
+        super().__init__(name, fields=fields)
+        self.comments = []
