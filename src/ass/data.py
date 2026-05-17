@@ -26,7 +26,7 @@ class Color(object):
         """ Convert a Visual Basic (ASS) color code into an ``Color``.
         """
         if not v.startswith("&H"):
-            raise ValueError("color must start with &H")
+            raise ValueError("color must start with &H (found '%s')" % v)
 
         rest = int(v[2:], 16)
 
