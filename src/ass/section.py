@@ -36,7 +36,7 @@ class LineSection(abc.MutableSequence):
             self.field_order = [field.strip() for field in raw_line.split(",")]
         else:
             if self.line_parsers is not None and type_name.lower() not in self.line_parsers:
-                raise ValueError("unexpected {} line in {}".format(type_name, self.name))
+                raise ValueError("unexpected '{}' line in {}".format(type_name, self.name))
 
             parser = (self.line_parsers[type_name.lower()]
                       if self.line_parsers is not None

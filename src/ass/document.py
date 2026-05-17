@@ -82,14 +82,14 @@ class Document(object):
 
         section = None
         seen_sections = CaseInsensitiveOrderedDict()
-        for i, line in enumerate(f):
+        for i, raw_line in enumerate(f):
             if i == 0:
                 bom_seqeunces = ("\xef\xbb\xbf", "\xff\xfe", "\ufeff")
-                if any(line.startswith(seq) for seq in bom_seqeunces):
+                if any(raw_line.startswith(seq) for seq in bom_seqeunces):
                     raise ValueError("BOM detected. Please open the file with the proper encoding,"
                                      " usually '%s'" % cls.PREFERRED_ENCODING.name)
 
-            line = line.strip()
+            line = raw_line.strip()
             if not line or line.startswith(';'):
                 continue
 
@@ -105,7 +105,7 @@ class Document(object):
                 continue
 
             if section is None:
-                raise ValueError('Content outside of any section.')
+                raise ValueError("Content outside of any section\n\n%d:%s" % (i+1, raw_line))
 
             if ':' not in line:
                 # illformed, ignore
@@ -113,7 +113,10 @@ class Document(object):
 
             type_name, _, line = line.partition(":")
             line = line.lstrip()
-            section.add_line(type_name, line)
+            try:
+                section.add_line(type_name, line)
+            except Exception as e:
+                raise type(e)("Failed to parse file\n\n%d:%s" % (i+1, raw_line)) from e
 
         # append default sections not present in the parsed file
         for section_name, section in doc.sections.items():
