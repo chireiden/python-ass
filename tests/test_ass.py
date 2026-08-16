@@ -135,6 +135,19 @@ class TestSections:
     def test_custom_line_section_dump(self, line_section):
         assert "\n".join(line_section.dump()) == self.TEST_CUSTOM
 
+    def test_dump_after_format_redefinition(self):
+        # A second "Format:" line in a section redefines the field order after
+        # the lines were parsed; dumping such a document used to raise KeyError.
+        doc = ass.Document.parse_string(dedent("""\
+            [Events]
+            Format: Layer, Start, End, Style, Text
+            Dialogue: 0,0:00:01.00,0:00:04.00,Default,Hello
+            Format: a"""))
+        out = StringIO()
+        doc.dump_file(out)
+        # the dumped document parses again without error
+        assert ass.Document.parse_string(out.getvalue()) is not None
+
 
 class TestEvents:
 
