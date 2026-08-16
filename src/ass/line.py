@@ -41,7 +41,11 @@ class _Line(object, metaclass=_WithFieldMeta):
         if field_order is None:
             field_order = self.DEFAULT_FIELD_ORDER
 
-        return ",".join(_Field.dump(self.fields[field])
+        # A field in field_order that the line does not carry (for example when
+        # a section has a second "Format:" line that redefines the order after
+        # the lines were parsed) dumps as empty rather than raising KeyError.
+        return ",".join(_Field.dump(self.fields[field]) if field in self.fields
+                        else ""
                         for field in field_order)
 
     def dump_with_type(self, field_order=None):
